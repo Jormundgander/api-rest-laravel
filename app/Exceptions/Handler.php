@@ -55,7 +55,9 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($exception instanceof ModelNotFoundException) {
-            return response()->json(0, 404);
+            return response()->json([
+                'message' => 'Cuenta no existente'
+            ], 200);
         }
 
         return parent::render($request, $exception);

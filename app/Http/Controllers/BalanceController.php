@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 
 class BalanceController extends Controller
 {
-    public function show(Request $request) 
+    public function show(Account $account)
     {
-    	$accountID = $request->input('account_id');
+    	/*$accountID = $request->input('account_id');
     	$account = Account::findOrFail($accountID);
-    	return $account->balance;
+        */
+
+        return $account->balance;
     }
 }

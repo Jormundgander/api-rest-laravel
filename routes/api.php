@@ -50,4 +50,6 @@ Route::post('/reset', 'ResetController@reset');
 
 Route::post('/event', 'EventController@store');
 
-Route::get('/balance', 'BalanceController@show');
+Route::get('/accounts', 'BalanceController@getAccounts');
+
+Route::get('/balance/{account}', 'BalanceController@show');
