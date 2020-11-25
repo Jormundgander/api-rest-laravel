@@ -6,11 +6,11 @@ import axios from 'axios';
 function Withdraw() {
     const [originAccount, setOriginAccount] = useState()
     const [destinationAccount, setDestinationAccount] = useState()
-    const [accounts, setAccounts] = useState()
+    const [accounts, setAccounts] = useState([])
 
-    /*useEffect(() => {
+    useEffect(() => {
         getAccounts()
-    }, [])*/
+    }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -20,15 +20,15 @@ function Withdraw() {
         )
     }
 
-    /*const getAccounts = () => {
+    const getAccounts = () => {
         axios.get(`http://127.0.0.1:8000/api/accounts`)
              .then(response => {
-                setAccounts(response.data)
-                console.log(response.data)
+                const res = response.data
+                setAccounts(res)
              })
-    }*/
+    }
 
-    const withdraw = (origin, destination, amount) => {
+    const withdraw = (origin, amount) => {
         const data = {
             "type": "withdraw",
             "origin": origin,
@@ -49,8 +49,14 @@ function Withdraw() {
                     value={originAccount}
                     onChange={(e) => setOriginAccount(e.currentTarget.value)}
                 >
-                    <option value="1">1</option>
-                    <option value="100">100</option>
+                    <option>Seleccione una cuenta</option>
+                    {
+                        accounts.map(item => (
+                            <option key={ item.id }>
+                                { item.id } - ${ item.balance }
+                            </option>
+                        ))
+                    }
                 </select>
 
                 <input

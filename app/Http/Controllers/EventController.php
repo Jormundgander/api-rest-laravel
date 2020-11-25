@@ -10,10 +10,10 @@ use Illuminate\Support\ServiceProvider;
 
 class EventController extends Controller
 {
-    /*public function getAccounts()
+    public function getAccounts()
     {
         return response()->json(Account::all(), 200);
-    }*/
+    }
 
 	// 201 {"destination": {"id":"100", "balance":10}}
 	// Create account with initial balance

@@ -66264,29 +66264,28 @@ function Withdraw() {
       destinationAccount = _useState4[0],
       setDestinationAccount = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState6 = _slicedToArray(_useState5, 2),
       accounts = _useState6[0],
       setAccounts = _useState6[1];
-  /*useEffect(() => {
-      getAccounts()
-  }, [])*/
 
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    getAccounts();
+  }, []);
 
   var handleSubmit = function handleSubmit(e) {
     e.preventDefault();
     withdraw(originAccount, e.target.amount.value);
   };
-  /*const getAccounts = () => {
-      axios.get(`http://127.0.0.1:8000/api/accounts`)
-           .then(response => {
-              setAccounts(response.data)
-              console.log(response.data)
-           })
-  }*/
 
+  var getAccounts = function getAccounts() {
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("http://127.0.0.1:8000/api/accounts").then(function (response) {
+      var res = response.data;
+      setAccounts(res);
+    });
+  };
 
-  var withdraw = function withdraw(origin, destination, amount) {
+  var withdraw = function withdraw(origin, amount) {
     var data = {
       "type": "withdraw",
       "origin": origin,
@@ -66305,11 +66304,11 @@ function Withdraw() {
     onChange: function onChange(e) {
       return setOriginAccount(e.currentTarget.value);
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
-    value: "1"
-  }, "1"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
-    value: "100"
-  }, "100")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", null, "Seleccione una cuenta"), accounts.map(function (item) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("option", {
+      key: item.id
+    }, item.id, " - $", item.balance);
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("input", {
     id: "amount",
     placeholder: "Monto a retirar",
     name: "amount"
