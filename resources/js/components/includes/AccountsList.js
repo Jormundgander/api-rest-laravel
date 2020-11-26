@@ -3,11 +3,24 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
-function AccountsList() {
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
+
+
+function AccountsList({deposit, id, amount}) {
     const [accounts, setAccounts] = useState([])
+    const accountDeposit = deposit
+    const accountIdForUpdate = id
+    const accountAmountForUpdate = amount
 
     useEffect(() => {
-        getAccounts()
+        setTimeout(() => {
+            getAccounts()
+        }, 3000)
     }, [])
 
     const getAccounts = () => {
@@ -19,32 +32,112 @@ function AccountsList() {
              })
     }
 
-    return (
-        <div className="col-md-4">
-            <h1 className="mt-5">Billeteras</h1>
-            <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                Crear nueva billetera
-            </button>
-            <table className="table text-center">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>SALDO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        accounts.map(item => (
-                            <tr>
-                                <th key={ item.id }>{ item.id }</th>
-                                <th>{ item.balance }</th>
-                            </tr>
-                        ))
-                    }
+    const addAccount = (account) => {
+        const data = {
+            "type": "create",
+            "origin": account,
+        }
 
-                </tbody>
-            </table>
-        </div>
+        axios.post(`http://127.0.0.1:8000/api/event`, data)
+             .then(response => {
+                 console.log(response.data)
+             })
+    }
+
+    const updateAccount = (id, amount) => {
+        const data = {
+            "type": "update",
+            "origin": id,
+            "amount": amount
+        }
+
+        axios.post(`http://127.0.0.1:8000/api/event`, data)
+             .then(response => {
+                 console.log(response.data)
+                 setAccounts(accounts.push(response.data))
+             })
+    }
+
+    const deleteAccount = (account) => {
+        const data = {
+            "type": "delete",
+            "origin": account,
+        }
+
+        axios.post(`http://127.0.0.1:8000/api/event`, data)
+             .then(response => {
+                 console.log(response.data)
+             })
+
+        getAccounts()
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        addAccount(e.target.account.value)
+        getAccounts()
+    }
+
+    return (
+        <Router>
+            <div className="row">
+                <div className="col-md-6">
+                    <h1 className="mt-5 text-center">Billeteras</h1>
+                    <span>
+                        <Link to="/createAccount">Crear billetera</Link>
+                    </span>
+                    <table className="table text-center">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>SALDO</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                accounts.map(item => (
+                                    <tr>
+                                        <th key={ item.id }>{ item.id }</th>
+                                        <th>{ item.balance }</th>
+                                        <th
+                                            onClick={() => deleteAccount(item.id)}
+                                        >x</th>
+                                    </tr>
+                                ))
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+                <Switch>
+                    <Route path="/createAccount">
+                        <div className="col-md-6 mt-5">
+                            <div className="mx-auto mt-1">
+                                <h1 className="text-center">Crear</h1>
+                                <form onSubmit={ handleSubmit }>
+                                    <div className="form-group">
+                                        <input
+                                            className="form-control"
+                                            id="addAccount"
+                                            placeholder="Número de billetera"
+                                            name="account"
+                                        />
+                                    </div>
+                                    <div className="d-flex justify-content-center">
+                                        <input
+                                            className="btn btn-primary text-white font-weight-bold"
+                                            type="submit"
+                                            value="Crear"
+                                        />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </Route>
+                </Switch>
+            </div>
+        </Router>
     )
 }
 

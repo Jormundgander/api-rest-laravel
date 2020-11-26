@@ -48,7 +48,7 @@ POST /event {"type":"transfer", "origin":"200", "amount":15, "destination":"300"
 */
 Route::post('/reset', 'ResetController@reset');
 
-Route::post('/event', 'EventController@store');
+Route::post('/event', 'EventController@handleEvents');
 
 Route::get('/accounts', 'EventController@getAccounts');
 

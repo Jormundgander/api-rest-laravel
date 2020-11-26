@@ -18,9 +18,13 @@ class EventController extends Controller
 	// 201 {"destination": {"id":"100", "balance":10}}
 	// Create account with initial balance
 	// POST /event {"type":"deposit", "destination":"100", "amount":10}
-    public function store(Request $request)
+    public function handleEvents(Request $request)
     {
-    	if($request->input('type') === 'deposit') {
+    	if($request->input('type') === 'create') {
+    		return $this->create(
+    			$request->input('origin')
+    		);
+        } elseif($request->input('type') === 'deposit') {
     		return $this->deposit(
     			$request->input('destination'),
     			$request->input('amount')
@@ -36,7 +40,32 @@ class EventController extends Controller
     			$request->input('destination'),
     			$request->input('amount')
     		);
+        } elseif($request->input('type') === 'update') {
+    		return $this->update(
+                $request->input('origin'),
+                $request->input('amount')
+    		);
+    	} elseif($request->input('type') === 'delete') {
+    		return $this->delete(
+    			$request->input('origin')
+    		);
     	}
+    }
+
+    private function create($origin)
+    {
+    	$account = Account::create([
+    		'id' => $origin
+    	]);
+
+    	$account->save();
+
+    	return response()->json([
+    		'origin' => [
+    			'id' => $account->id,
+    			'balance' => $account->balance
+    		]
+    	], 201);
     }
 
     private function deposit($destination, $amount)
@@ -91,7 +120,8 @@ class EventController extends Controller
 		    $destinationAccount->balance += $amount;
 
 		    $originAccount->save();
-		    $destinationAccount->save();
+            $destinationAccount->save();
+
 		});
 
 		return response()->json([
@@ -104,5 +134,29 @@ class EventController extends Controller
     			'balance' => $destinationAccount->balance
     		]
     	], 201);
+    }
+
+    private function update($origin, $mount)
+    {
+    	$account = Account::findOrFail($origin);
+
+        $account->balance += $mount;
+
+    	$account->save();
+
+    	return response()->json([
+    		'Message' => 'Billetera actualizada exitosamente'
+    	], 200);
+    }
+
+    private function delete($origin)
+    {
+    	$account = Account::findOrFail($origin);
+
+    	$account->delete();
+
+    	return response()->json([
+    		'Message' => 'Billetera eliminada exitosamente'
+    	], 200);
     }
 }

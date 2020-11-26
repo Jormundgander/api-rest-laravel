@@ -9,10 +9,10 @@ import {
   } from "react-router-dom";
 
   import Account from './Account';
-  import Deposit from './Deposit';
   import Transfer from './Transfer';
   import Withdraw from './Withdraw';
-  import AccountsList from './includes/AccountsList'
+  import Deposit from './Deposit';
+  import AccountList from './includes/AccountsList'
 
 function Navbar() {
     return (
@@ -34,42 +34,27 @@ function Navbar() {
                 </ul>
             </div>
 
-            <div className="row w-50">
-                <div className="col-md-8">
-                    <AccountsList />
+            <div className="row">
+                <div className="col-md-8 p-5">
+                    <AccountList />
+                </div>
+                <div className="col-md-4 mx-auto mt-5">
+                <Switch>
+                    <Route path="/accounts">
+                        <Account />
+                    </Route>
+                    <Route path="/deposit">
+                        <Deposit />
+                    </Route>
+                    <Route path="/transfer">
+                        <Transfer />
+                    </Route>
+                    <Route path="/withdraw">
+                        <Withdraw />
+                    </Route>
+                </Switch>
                 </div>
             </div>
-
-            <Switch>
-                <Route path="/accounts">
-                    <div className="row">
-                        <div className="col-md-8">
-                            <Account />
-                        </div>
-                    </div>
-                </Route>
-                <Route path="/deposit">
-                    <div className="row">
-                        <div className="col-md-8">
-                            <Deposit />
-                        </div>
-                    </div>
-                </Route>
-                <Route path="/transfer">
-                    <div className="row">
-                        <div className="col-md-8">
-                            <Transfer />
-                        </div>
-                    </div>
-                </Route>
-                <Route path="/withdraw">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <Withdraw />
-                        </div>
-                    </div>
-                </Route>
-            </Switch>
         </Router>
     );
 }
