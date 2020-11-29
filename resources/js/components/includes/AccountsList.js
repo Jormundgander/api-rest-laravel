@@ -53,10 +53,10 @@ function AccountsList() {
             <div className="row">
                 <div className="col-md-6">
                     <h1 className="mt-5 text-center">Billeteras</h1>
-                    <span>
-                        <Link to="/createAccount">Crear billetera</Link>
+                    <span className="d-flex justify-content-center">
+                        <Link className="createAccount" to="/createAccount">Crear billetera</Link>
                     </span>
-                    <table className="table text-center">
+                    <table className="table text-center mt-2">
                         <thead>
                             <tr>
                                 <th>CÓDIGO</th>
@@ -70,9 +70,14 @@ function AccountsList() {
                                     <tr>
                                         <th>{ item.id }</th>
                                         <th>{ item.balance }</th>
-                                        <th className="deleteAccount"
+                                        <th>
+                                            <a href="#"
+                                            className="deleteAccount pl-2 pr-2 pt-1 pb-1 text-danger font-weight-bold rounded-circle"
                                             onClick={() => deleteAccount(item.id)}
-                                        >x</th>
+                                            >
+                                                x
+                                            </a>
+                                        </th>
                                     </tr>
                                 ))
                             }

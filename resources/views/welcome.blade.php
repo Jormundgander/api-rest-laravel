@@ -29,18 +29,21 @@
             text-decoration: none;
             border-bottom: 1px solid #FFF;
         }
-        a {
-            color: #e71e10;
+        .createAccount {
+            padding: 4px 10px 4px 10px;
+            font-weight: bold;
+            border-radius: 15px;
+            color: #F2F2F2;
+            background:rgb(27, 27, 27);
         }
-        a:hover {
-            color: #e71e10;
+        .createAccount:hover {
             text-decoration: none;
+            color: #F2F2F2;
+            background: rgb(31, 31, 31);
+            border: none;
         },
         .deleteAccount {
             color: #e71e10;
-            background: #FFF;
-            padding: 2px;
-            border-radius: 10px;
         }
         .btn-primary {
             background: rgb(27, 27, 27);

@@ -22,7 +22,7 @@ function App() {
 
     return (
         <DataContext.Provider value={{ accounts, setAccounts, getAccounts }}>
-            <div>
+            <div className="pl-3 pr-3">
                 <div className="row">
                     <div className="col-md-12">
                         <AppRouter />
