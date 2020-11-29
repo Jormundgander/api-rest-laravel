@@ -2,60 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
     Link
   } from "react-router-dom";
 
-  import Account from './Account';
-  import Transfer from './Transfer';
-  import Withdraw from './Withdraw';
-  import Deposit from './Deposit';
-  import AccountList from './includes/AccountsList'
-
 function Navbar() {
     return (
-        <Router>
-            <div>
-                <ul className="nav justify-content-center">
-                    <li className="nav-item">
-                        <Link to="/accounts" className="nav-link active">Cuentas</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/deposit" className="nav-link">Depositar</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/transfer" className="nav-link">Transferir</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link to="/withdraw" className="nav-link">Retirar</Link>
-                    </li>
-                </ul>
-            </div>
-
-            <div className="row">
-                <div className="col-md-8 p-5">
-                    <AccountList />
-                </div>
-                <div className="col-md-4 mx-auto mt-5">
-                <Switch>
-                    <Route path="/accounts">
-                        <Account />
-                    </Route>
-                    <Route path="/deposit">
-                        <Deposit />
-                    </Route>
-                    <Route path="/transfer">
-                        <Transfer />
-                    </Route>
-                    <Route path="/withdraw">
-                        <Withdraw />
-                    </Route>
-                </Switch>
-                </div>
-            </div>
-        </Router>
+        <div>
+            <ul className="nav justify-content-center">
+                <li className="nav-item">
+                    <Link to="/deposit" className="nav-link">Depositar</Link>
+                </li>
+                <li className="nav-item">
+                    <Link to="/transfer" className="nav-link">Transferir</Link>
+                </li>
+                <li className="nav-item">
+                    <Link to="/withdraw" className="nav-link">Retirar</Link>
+                </li>
+            </ul>
+        </div>
     );
 }
 

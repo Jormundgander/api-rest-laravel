@@ -11,10 +11,12 @@ require('./bootstrap');
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+require('./components/includes/ServiceProvider');
 require('./components/App');
+require('./components/AppRouter');
+require('./components/includes/AccountsList');
 require('./components/Navbar');
 require('./components/Account');
 require('./components/Transfer');
-require('./components/Transfer');
+require('./components/Deposit');
 require('./components/Withdraw');

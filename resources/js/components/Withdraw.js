@@ -1,31 +1,23 @@
-import Axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
-function Withdraw() {
-    const [originAccount, setOriginAccount] = useState()
-    const [destinationAccount, setDestinationAccount] = useState()
-    const [accounts, setAccounts] = useState([])
+import { DataContext } from './includes/ServiceProvider'
 
-    useEffect(() => {
-        getAccounts()
-    }, [])
+function Withdraw() {
+    const { accounts, setAccounts, getAccounts } = useContext( DataContext )
+
+    const [datosEntrada, setDatosEntrada] = useState({
+        originAccount: '',
+        amount: ''
+    })
 
     const handleSubmit = (e) => {
         e.preventDefault()
         withdraw(
-            originAccount,
-            e.target.amount.value
+            datosEntrada.originAccount,
+            datosEntrada.amount
         )
-    }
-
-    const getAccounts = () => {
-        axios.get(`http://127.0.0.1:8000/api/accounts`)
-             .then(response => {
-                const res = response.data
-                setAccounts(res)
-             })
     }
 
     const withdraw = (origin, amount) => {
@@ -37,39 +29,58 @@ function Withdraw() {
 
         axios.post(`http://127.0.0.1:8000/api/event`, data)
              .then(response => {
-                 console.log(response.data)
+                 setAccounts(Array.from(response.data))
              })
+
+        getAccounts()
+    }
+
+    const handleChange = e => {
+        setDatosEntrada({
+            ...datosEntrada,
+            [ e.target.name ] : e.target.value
+        })
     }
 
     return (
-        <div>
+        <div className="mt-5">
+            <h1 className="text-center mt-2">Retirar</h1>
             <form onSubmit={ handleSubmit }>
-                <select
-                    id="originAccount"
-                    value={originAccount}
-                    onChange={(e) => setOriginAccount(e.currentTarget.value)}
-                >
-                    <option>Seleccione una cuenta</option>
-                    {
-                        accounts.map(item => (
-                            <option key={ item.id }>
-                                { item.id } - ${ item.balance }
-                            </option>
-                        ))
-                    }
-                </select>
+                <div className="form-group">
+                    <select
+                        className="form-control"
+                        name="originAccount"
+                        value={ datosEntrada.originAccount }
+                        onChange={ handleChange }
+                    >
+                        <option>Seleccione una cuenta</option>
+                        {
+                            accounts.map(item => (
+                                <option key={ item.id }>
+                                    { item.id } - ${ item.balance }
+                                </option>
+                            ))
+                        }
+                    </select>
+                </div>
 
-                <input
-                    id="amount"
-                    placeholder="Monto a retirar"
-                    name="amount"
-                />
+                <div className="form-group">
+                    <input
+                        className="form-control"
+                        name="amount"
+                        placeholder="Monto a retirar"
+                        value={ datosEntrada.amount }
+                        onChange={ handleChange }
+                    />
+                </div>
 
-                <input
-                    className="btn btn-primary text-white font-weight-bold"
-                    type="submit"
-                    value="Retirar"
-                />
+                <div className="d-flex justify-content-center">
+                    <input
+                        className="btn btn-primary text-white font-weight-bold"
+                        type="submit"
+                        value="Retirar"
+                    />
+                </div>
             </form>
         </div>
     )

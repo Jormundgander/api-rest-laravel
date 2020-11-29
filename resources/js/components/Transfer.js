@@ -1,33 +1,27 @@
-import Axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
-function Transfer() {
-    const [originAccount, setOriginAccount] = useState()
-    const [destinationAccount, setDestinationAccount] = useState()
-    const [accounts, setAccounts] = useState()
+import { DataContext } from './includes/ServiceProvider'
 
-    /*useEffect(() => {
-        getAccounts()
-    }, [])*/
+function Transfer() {
+
+    const { accounts, setAccounts, getAccounts } = useContext( DataContext )
+
+    const [datosEntrada, setDatosEntrada] = useState({
+        originAccount: '',
+        destinationAccount: '',
+        amount: ''
+    })
 
     const handleSubmit = (e) => {
         e.preventDefault()
         transfer(
-            originAccount,
-            destinationAccount,
-            e.target.amount.value
+            datosEntrada.originAccount,
+            datosEntrada.destinationAccount,
+            datosEntrada.amount
         )
     }
-
-    /*const getAccounts = () => {
-        axios.get(`http://127.0.0.1:8000/api/accounts`)
-             .then(response => {
-                setAccounts(response.data)
-                console.log(response.data)
-             })
-    }*/
 
     const transfer = (origin, destination, amount) => {
         const data = {
@@ -39,42 +33,76 @@ function Transfer() {
 
         axios.post(`http://127.0.0.1:8000/api/event`, data)
              .then(response => {
-                 console.log(response.data)
+                 setAccounts(Array.from(response.data))
              })
+        console.log(data);
+        getAccounts()
+    }
+
+    const handleChange = e => {
+        setDatosEntrada({
+            ...datosEntrada,
+            [ e.target.name ] : e.target.value
+        })
     }
 
     return (
-        <div>
+        <div className="mt-5">
+            <h1 className="text-center mt-2">Transferir</h1>
             <form onSubmit={ handleSubmit }>
-                <select
-                    id="originAccount"
-                    value={originAccount}
-                    onChange={(e) => setOriginAccount(e.currentTarget.value)}
-                >
-                    <option value="1">1</option>
-                    <option value="100">100</option>
-                </select>
+                <div className="form-group">
+                    <select
+                        className="form-control"
+                        name="originAccount"
+                        value={ datosEntrada.originAccount }
+                        onChange={ handleChange }
+                    >
+                        <option>Seleccione billetera de origen</option>
+                        {
+                            accounts.map(item => (
+                                <option key={ item.id }>
+                                    { item.id } - $ { item.balance }
+                                </option>
+                            ))
+                        }
+                    </select>
+                </div>
 
-                <select
-                    id="destinationAccount"
-                    value={destinationAccount}
-                    onChange={(e) => setDestinationAccount(e.currentTarget.value)}
-                >
-                    <option value="Destination1">Destination1</option>
-                    <option value="111">111</option>
-                </select>
+                <div className="form-group">
+                    <select
+                        className="form-control"
+                        name="destinationAccount"
+                        value={ datosEntrada.destinationAccount }
+                        onChange={ handleChange }
+                    >
+                        <option>Seleccione billetera de destino</option>
+                        {
+                            accounts.map(item => (
+                                <option key={ item.id }>
+                                    { item.id } - $ { item.balance }
+                                </option>
+                            ))
+                        }
+                    </select>
+                </div>
 
-                <input
-                    id="amount"
-                    placeholder="Monto a transferir"
-                    name="amount"
-                />
+                <div className="form-group">
+                    <input
+                        className="form-control"
+                        name="amount"
+                        placeholder="Monto a transferir"
+                        value={ datosEntrada.amount }
+                        onChange={ handleChange }
+                    />
+                </div>
 
-                <input
-                    className="btn btn-primary text-white font-weight-bold"
-                    type="submit"
-                    value="Transferir"
-                />
+                <div className="d-flex justify-content-center">
+                    <input
+                        className="btn btn-primary text-white font-weight-bold"
+                        type="submit"
+                        value="Transferir"
+                    />
+                </div>
             </form>
         </div>
     )

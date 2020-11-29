@@ -1,16 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import Navbar from './Navbar';
+
+import AppRouter from './AppRouter';
+import { DataContext } from './includes/ServiceProvider'
+
 
 function App() {
+    const [accounts, setAccounts] = useState([])
+
+    useEffect(() => {
+        getAccounts()
+    }, [])
+
+    const getAccounts = () => {
+        axios.get(`http://127.0.0.1:8000/api/accounts`)
+             .then(response => {
+                const res = Array.from(response.data)
+                setAccounts(res)
+            })
+    }
+
     return (
-        <div>
-            <div className="row">
-                <div className="col-md-12">
-                    <Navbar />
+        <DataContext.Provider value={{ accounts, setAccounts, getAccounts }}>
+            <div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <AppRouter />
+                    </div>
                 </div>
             </div>
-        </div>
+        </DataContext.Provider>
     );
 }
 

@@ -1,33 +1,23 @@
-import Axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
-import AccountList from './includes/AccountsList'
+import { DataContext } from './includes/ServiceProvider'
 
 function Deposit() {
-    const [destination, setDestinationAccount] = useState()
-    const [accounts, setAccounts] = useState([])
+    const { accounts, setAccounts, getAccounts } = useContext( DataContext )
 
-    useEffect(() => {
-        getAccounts()
-    }, [])
+    const [datosEntrada, setDatosEntrada] = useState({
+        destinationAccount: '',
+        amount: ''
+    })
 
     const handleSubmit = (e) => {
         e.preventDefault()
         deposit(
-            destination,
-            e.target.amount.value
+            datosEntrada.destinationAccount,
+            datosEntrada.amount
         )
-        console.log(destination)
-    }
-
-    const getAccounts = () => {
-        axios.get(`http://127.0.0.1:8000/api/accounts`)
-             .then(response => {
-                const res = response.data
-                setAccounts(res)
-             })
     }
 
     const deposit = (destination, amount) => {
@@ -39,8 +29,17 @@ function Deposit() {
 
         axios.post(`http://127.0.0.1:8000/api/event`, data)
              .then(response => {
-                 console.log(response.data)
+                setAccounts(Array.from(response.data))
              })
+
+        getAccounts()
+    }
+
+    const handleChange = e => {
+        setDatosEntrada({
+            ...datosEntrada,
+            [e.target.name] : e.target.value
+        })
     }
 
     return (
@@ -49,15 +48,16 @@ function Deposit() {
             <form onSubmit={ handleSubmit }>
                 <div className="form-group">
                     <select
-                        id="destinationAccount"
-                        value={destination}
-                        onChange={(e) => setDestinationAccount(e.currentTarget.value)}
+                        className="form-control"
+                        name="destinationAccount"
+                        value={ datosEntrada.destinationAccount }
+                        onChange={ handleChange }
                     >
                         <option>Seleccione una cuenta</option>
                         {
-                            accounts.map(item => (
-                                <option key={ item.id }>
-                                   { item.id } - ${ item.balance }
+                            accounts.map((item, index) => (
+                                <option key={ index }>
+                                { item.id } - ${ item.balance }
                                 </option>
                             ))
                         }
@@ -67,9 +67,10 @@ function Deposit() {
                 <div className="form-group">
                     <input
                         className="form-control"
-                        id="amount"
-                        placeholder="Monto a depositar"
                         name="amount"
+                        placeholder="Monto a depositar"
+                        value={ datosEntrada.amount }
+                        onChange={ handleChange }
                     />
                 </div>
 

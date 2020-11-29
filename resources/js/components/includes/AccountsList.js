@@ -1,5 +1,4 @@
-import Axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
@@ -10,27 +9,11 @@ import {
     Link
 } from "react-router-dom";
 
+import { DataContext } from './ServiceProvider'
 
-function AccountsList({deposit, id, amount}) {
-    const [accounts, setAccounts] = useState([])
-    const accountDeposit = deposit
-    const accountIdForUpdate = id
-    const accountAmountForUpdate = amount
+function AccountsList() {
 
-    useEffect(() => {
-        setTimeout(() => {
-            getAccounts()
-        }, 3000)
-    }, [])
-
-    const getAccounts = () => {
-        axios.get(`http://127.0.0.1:8000/api/accounts`)
-             .then(response => {
-                const res = response.data
-                console.log(res)
-                setAccounts(res)
-             })
-    }
+    const { accounts, setAccounts, getAccounts } = useContext( DataContext )
 
     const addAccount = (account) => {
         const data = {
@@ -40,22 +23,9 @@ function AccountsList({deposit, id, amount}) {
 
         axios.post(`http://127.0.0.1:8000/api/event`, data)
              .then(response => {
-                 console.log(response.data)
+                setAccounts(Array.from(response.data))
              })
-    }
-
-    const updateAccount = (id, amount) => {
-        const data = {
-            "type": "update",
-            "origin": id,
-            "amount": amount
-        }
-
-        axios.post(`http://127.0.0.1:8000/api/event`, data)
-             .then(response => {
-                 console.log(response.data)
-                 setAccounts(accounts.push(response.data))
-             })
+        getAccounts()
     }
 
     const deleteAccount = (account) => {
@@ -89,18 +59,18 @@ function AccountsList({deposit, id, amount}) {
                     <table className="table text-center">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>CÓDIGO</th>
                                 <th>SALDO</th>
                                 <th> </th>
                             </tr>
                         </thead>
                         <tbody>
                             {
-                                accounts.map(item => (
+                                accounts.map((item, index) => (
                                     <tr>
-                                        <th key={ item.id }>{ item.id }</th>
+                                        <th>{ item.id }</th>
                                         <th>{ item.balance }</th>
-                                        <th
+                                        <th className="deleteAccount"
                                             onClick={() => deleteAccount(item.id)}
                                         >x</th>
                                     </tr>
